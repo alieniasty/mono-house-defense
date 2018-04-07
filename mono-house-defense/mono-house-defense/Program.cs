@@ -14,7 +14,7 @@ namespace mono_house_defense
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
+            using (var game = new HouseDefenseGame())
                 game.Run();
         }
     }
