@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2011
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mono-house-defense", "mono-house-defense\mono-house-defense.csproj", "{AD5AB694-BBDC-42D7-A2BF-47A90EC07CCC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AD5AB694-BBDC-42D7-A2BF-47A90EC07CCC}.Debug|x86.ActiveCfg = Debug|x86
+		{AD5AB694-BBDC-42D7-A2BF-47A90EC07CCC}.Debug|x86.Build.0 = Debug|x86
+		{AD5AB694-BBDC-42D7-A2BF-47A90EC07CCC}.Release|x86.ActiveCfg = Release|x86
+		{AD5AB694-BBDC-42D7-A2BF-47A90EC07CCC}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {17F4DA44-51FE-4494-9044-70DD88B83567}
+	EndGlobalSection
+EndGlobal
