@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using mono_house_defense.Characters.Abstractions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -10,44 +12,44 @@ namespace mono_house_defense.Characters
 {
     public class Skeleton : CharacterBase
     {
-        public Dictionary<string, int> FramesMetadata { get; set; }
-
-        public override void AddFrame(string frame, Texture2D texture, Rectangle sourceRectangle, SpriteEffects spriteEffects)
+        public void Walk(SpriteBatch spriteBatch)
         {
-            base.DrawableCharactersBase.Add(frame, new DrawableCharacter
-            {
-                Texture2D = texture,
-                SourceRectangle = sourceRectangle,
-                SpriteEffects = spriteEffects
-            });
+            base.Draw(
+                spriteBatch, 
+                frame: $"{CharacterAction.Walk}_{frame.WalkFrameIndex}", 
+                position: Position, 
+                rotation: 0.0f, 
+                scale: 2);
         }
 
-        public override void LoadAllFrames(CharacterAction action, Texture2D skeletonTexture, int numberOfFramesInSpriteSheet)
+        public void Fight(SpriteBatch spriteBatch)
         {
-            UpdateFramesMetadata(action.ToString(), numberOfFramesInSpriteSheet);
-
-            var frameBeginning = 0;
-
-            for (var i = 0; i < numberOfFramesInSpriteSheet; i++)
-            {
-                var sourceRectangle = new Rectangle(frameBeginning, 0, 22, 33);
-                AddFrame($"{action.ToString()}_{i}", skeletonTexture, sourceRectangle, SpriteEffects.None);
-                frameBeginning += 22;
-            }
-            
+            base.Draw(
+                spriteBatch,
+                frame: $"{CharacterAction.Fight}_{frame.FightFrameIndex}",
+                position: Position,
+                rotation: 0.0f,
+                scale: 2);
         }
 
-        private void UpdateFramesMetadata(string framesPartialName, int numberOfFramesInSpriteSheet)
+        public void Hit(SpriteBatch spriteBatch)
         {
-            FramesMetadata.Add(framesPartialName, numberOfFramesInSpriteSheet);
+            base.Draw(
+                spriteBatch,
+                frame: $"{CharacterAction.Hit}_{frame.HitFrameIndex}",
+                position: Position,
+                rotation: 0.0f,
+                scale: 2);
         }
 
-        public void Walk(SpriteBatch spriteBatch, Vector2 position)
+        public void Die(SpriteBatch spriteBatch)
         {
-            foreach (var key in FramesMetadata.Keys.Where(k => k.Equals(CharacterAction.Walk.ToString())))
-            {
-                
-            }
+            base.Draw(
+                spriteBatch,
+                frame: $"{CharacterAction.Die}_{frame.DieFrameIndex}",
+                position: Position,
+                rotation: 0.0f,
+                scale: 2);
         }
     }
 

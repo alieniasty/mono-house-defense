@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace mono_house_defense.Characters
+namespace mono_house_defense.Characters.Abstractions
 {
     public class DrawableCharacter
     {

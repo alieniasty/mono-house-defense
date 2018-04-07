@@ -41,9 +41,10 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Characters\CharacterAction.cs" />
-    <Compile Include="Characters\CharacterBase.cs" />
-    <Compile Include="Characters\DrawableCharacter.cs" />
+    <Compile Include="Characters\Abstractions\CharacterAction.cs" />
+    <Compile Include="Characters\Abstractions\CharacterBase.cs" />
+    <Compile Include="Characters\Abstractions\DrawableCharacter.cs" />
+    <Compile Include="Characters\Abstractions\Frame.cs" />
     <Compile Include="Characters\Skeleton.cs" />
     <Compile Include="HouseDefenseGame.cs" />
     <Compile Include="Program.cs" />
@@ -57,7 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\skeleton_walk.png" />
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
