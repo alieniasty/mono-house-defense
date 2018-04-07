@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Characters\CharacterAction.cs" />
     <Compile Include="Characters\CharacterBase.cs" />
     <Compile Include="Characters\DrawableCharacter.cs" />
     <Compile Include="Characters\Skeleton.cs" />

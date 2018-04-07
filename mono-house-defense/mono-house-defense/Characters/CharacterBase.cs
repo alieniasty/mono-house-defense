@@ -13,7 +13,7 @@ namespace mono_house_defense.Characters
         protected Dictionary<string, DrawableCharacter> DrawableCharactersBase = new Dictionary<string, DrawableCharacter>();
 
         public abstract void AddFrame(string frame, Texture2D texture, Rectangle sourceRectangle, SpriteEffects spriteEffects);
-        public abstract void LoadAllFrames(Texture2D skeletonTexture, int numberOfFramesInSpriteSheet);
+        public abstract void LoadAllFrames(CharacterAction action, Texture2D skeletonTexture, int numberOfFramesInSpriteSheet);
 
         public void Draw(SpriteBatch spriteBatch, string frame, Vector2 position, float rotation, int scale)
         {

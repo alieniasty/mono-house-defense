@@ -33,7 +33,7 @@ namespace mono_house_defense
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             SkeletonTexture = Content.Load<Texture2D>("Skeleton/skeleton_walk");
-            skeleton.LoadAllFrames(SkeletonTexture, numberOfFramesInSpriteSheet: 13);
+            skeleton.LoadAllFrames(CharacterAction.Walk, SkeletonTexture, numberOfFramesInSpriteSheet: 13);
         }
        
         protected override void UnloadContent()
@@ -53,16 +53,12 @@ namespace mono_house_defense
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             Vector2 position = new Vector2(100, 100);
-            Vector2 position1 = new Vector2(150, 100);
-            Vector2 position2 = new Vector2(300, 100);
 
             
 
             spriteBatch.Begin();
-            
-            skeleton.Draw(spriteBatch, "walk_1", position, 0.0f, 1);
-            skeleton.Draw(spriteBatch, "walk_2", position1, 0.0f, 1);
-            skeleton.Draw(spriteBatch, "walk_3", position2, 0.0f, 1);
+
+            skeleton.Walk(spriteBatch, position);
 
             spriteBatch.End();
 
