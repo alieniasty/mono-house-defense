@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using mono_house_defense.Characters;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -13,6 +14,7 @@ namespace mono_house_defense
         SpriteBatch spriteBatch;
 
         public Texture2D SkeletonTexture { get; set; }
+        Skeleton skeleton = new Skeleton();
 
         public HouseDefenseGame()
         {
@@ -31,6 +33,7 @@ namespace mono_house_defense
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             SkeletonTexture = Content.Load<Texture2D>("Skeleton/skeleton_walk");
+            skeleton.LoadAllFrames(SkeletonTexture, numberOfFramesInSpriteSheet: 13);
         }
        
         protected override void UnloadContent()
@@ -49,12 +52,18 @@ namespace mono_house_defense
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            Rectangle sourceRectangle = new Rectangle(0, 0, 22, 33); 
             Vector2 position = new Vector2(100, 100);
-            Vector2 origin = new Vector2(0, 0);
+            Vector2 position1 = new Vector2(150, 100);
+            Vector2 position2 = new Vector2(300, 100);
+
+            
 
             spriteBatch.Begin();
-            spriteBatch.Draw(SkeletonTexture, position, sourceRectangle, Color.White, 0.0f, origin, 3, SpriteEffects.None, 0.0f);
+            
+            skeleton.Draw(spriteBatch, "walk_1", position, 0.0f, 1);
+            skeleton.Draw(spriteBatch, "walk_2", position1, 0.0f, 1);
+            skeleton.Draw(spriteBatch, "walk_3", position2, 0.0f, 1);
+
             spriteBatch.End();
 
             base.Draw(gameTime);

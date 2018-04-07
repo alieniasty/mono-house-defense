@@ -42,6 +42,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Characters\CharacterBase.cs" />
+    <Compile Include="Characters\DrawableCharacter.cs" />
+    <Compile Include="Characters\Skeleton.cs" />
     <Compile Include="HouseDefenseGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
