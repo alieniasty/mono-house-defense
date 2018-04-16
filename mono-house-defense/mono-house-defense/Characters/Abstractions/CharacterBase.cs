@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -7,10 +8,25 @@ namespace mono_house_defense.Characters.Abstractions
 {
     public abstract class CharacterBase
     {
-        protected Dictionary<string, DrawableCharacter> DrawableCharactersBase = new Dictionary<string, DrawableCharacter>();
+        private float timeSinceLastFrame;
+        private float _millisecondsPerFrame;
 
-        protected Frame frame;
-        protected Vector2 Position { get; set; }
+        protected Dictionary<string, DrawableCharacter> DrawableCharactersBase = new Dictionary<string, DrawableCharacter>();
+        protected Frame Frame;
+        protected Vector2 _initialPosition;
+        private float _speed;
+
+        public abstract void Walk(SpriteBatch spriteBatch);
+        public abstract void Fight(SpriteBatch spriteBatch);
+        public abstract void Hit(SpriteBatch spriteBatch);
+        public abstract void Die(SpriteBatch spriteBatch);
+
+        public CharacterBase(float millisecondsPerFrame, Vector2 initialPosition, float speed)
+        {
+            _millisecondsPerFrame = millisecondsPerFrame;
+            _initialPosition = initialPosition;
+            _speed = speed;
+        }
 
         protected virtual void AddFrame(string frame, Texture2D texture, Rectangle sourceRectangle, SpriteEffects spriteEffects)
         {
@@ -43,48 +59,53 @@ namespace mono_house_defense.Characters.Abstractions
             switch (action)
             {
                 case CharacterAction.Walk:
-                    frame.WalkFrameMaxIndex = numberOfFramesInSpriteSheet - 1;
+                    Frame.WalkFrameMaxIndex = numberOfFramesInSpriteSheet - 1;
                     break;
                 case CharacterAction.Die:
-                    frame.DieFrameMaxIndex = numberOfFramesInSpriteSheet - 1;
+                    Frame.DieFrameMaxIndex = numberOfFramesInSpriteSheet - 1;
                     break;
                 case CharacterAction.Fight:
-                    frame.FightFrameMaxIndex = numberOfFramesInSpriteSheet - 1;
+                    Frame.FightFrameMaxIndex = numberOfFramesInSpriteSheet - 1;
                     break;
                 case CharacterAction.Hit:
-                    frame.HitFrameMaxIndex = numberOfFramesInSpriteSheet - 1;
+                    Frame.HitFrameMaxIndex = numberOfFramesInSpriteSheet - 1;
                     break;
             }
         }
 
-        public virtual void UpdateAnimation(CharacterAction action)
+        public virtual void UpdateAnimation(CharacterAction action, GameTime gameTime)
         {
-            switch (action)
+            timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
+            if (timeSinceLastFrame > _millisecondsPerFrame)
             {
-                case CharacterAction.Walk:
-                    if (frame.WalkFrameIndex == frame.WalkFrameMaxIndex) frame.WalkFrameIndex = 0;
-                    frame.WalkFrameIndex++;
-                    break;
-                case CharacterAction.Die:
-                    if (frame.DieFrameIndex == frame.DieFrameMaxIndex) frame.DieFrameIndex = 0;
-                    frame.DieFrameIndex++;
-                    break;
-                case CharacterAction.Fight:
-                    if (frame.FightFrameIndex == frame.FightFrameMaxIndex) frame.FightFrameIndex = 0;
-                    frame.FightFrameIndex++;
-                    break;
-                case CharacterAction.Hit:
-                    if (frame.HitFrameIndex == frame.HitFrameMaxIndex) frame.HitFrameIndex = 0;
-                    frame.HitFrameIndex++;
-                    break;
+                timeSinceLastFrame = 0;
+                switch (action)
+                {
+                    case CharacterAction.Walk:
+                        if (Frame.WalkFrameIndex == Frame.WalkFrameMaxIndex) Frame.WalkFrameIndex = 0;
+                        Frame.WalkFrameIndex++;
+                        break;
+                    case CharacterAction.Die:
+                        if (Frame.DieFrameIndex == Frame.DieFrameMaxIndex) Frame.DieFrameIndex = 0;
+                        Frame.DieFrameIndex++;
+                        break;
+                    case CharacterAction.Fight:
+                        if (Frame.FightFrameIndex == Frame.FightFrameMaxIndex) Frame.FightFrameIndex = 0;
+                        Frame.FightFrameIndex++;
+                        break;
+                    case CharacterAction.Hit:
+                        if (Frame.HitFrameIndex == Frame.HitFrameMaxIndex) Frame.HitFrameIndex = 0;
+                        Frame.HitFrameIndex++;
+                        break;
+                }
             }
         }
 
-        public virtual void UpdatePosition(GameTime gameTime, float speed)
+        public virtual void UpdatePosition(GameTime gameTime)
         {
-            var position = Position;
-            position.X += (float)gameTime.ElapsedGameTime.TotalMilliseconds / speed;
-            Position = position;
+            var position = _initialPosition;
+            position.X += (float)gameTime.ElapsedGameTime.TotalMilliseconds / _speed;
+            _initialPosition = position;
         }
 
         public void Draw(SpriteBatch spriteBatch, string frame, Vector2 position, float rotation, int scale)
