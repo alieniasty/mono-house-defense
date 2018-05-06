@@ -11,8 +11,10 @@ namespace mono_house_defense.Characters
 {
     public class Knight : CharacterBase
     {
-        public Knight(float millisecondsPerFrame, Vector2 initialPosition, float speed) 
-            : base(millisecondsPerFrame, initialPosition, speed)
+        private const float _scale = 1;
+
+        public Knight(float millisecondsPerFrame, Vector2 position, float speed) 
+            : base(millisecondsPerFrame, position, speed)
         {
         }
 
@@ -26,9 +28,8 @@ namespace mono_house_defense.Characters
             base.Draw(
                 spriteBatch,
                 frame: $"{CharacterAction.Walk}_{Frame.WalkFrameIndex}",
-                position: _initialPosition,
                 rotation: 0.0f,
-                scale: 2);
+                scale: _scale);
         }
 
         public override void Fight(SpriteBatch spriteBatch)
@@ -36,9 +37,8 @@ namespace mono_house_defense.Characters
             base.Draw(
                 spriteBatch,
                 frame: $"{CharacterAction.Fight}_{Frame.FightFrameIndex}",
-                position: _initialPosition,
                 rotation: 0.0f,
-                scale: 2);
+                scale: _scale);
         }
 
         public override void Die(SpriteBatch spriteBatch)
@@ -46,9 +46,8 @@ namespace mono_house_defense.Characters
             base.Draw(
                 spriteBatch,
                 frame: $"{CharacterAction.Die}_{Frame.DieFrameIndex}",
-                position: _initialPosition,
                 rotation: 0.0f,
-                scale: 2);
+                scale: _scale);
         }
     }
 }

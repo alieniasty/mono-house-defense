@@ -20,14 +20,15 @@ namespace mono_house_defense.Loaders
             _content = content;
         }
 
-        public void LoadSkeleton(Texture2D skeletonTexture, Skeleton skeleton)
+        public void LoadSkeleton(Skeleton skeleton)
         {
-            skeletonTexture = _content.Load<Texture2D>("Skeleton/skeleton_attack");
+            var skeletonTexture = _content.Load<Texture2D>("Skeleton/skeleton_attack");
 
             skeleton.LoadAllFrames(
                 CharacterAction.Fight,
                 skeletonTexture,
-                numberOfFramesInSpriteSheet: 18,
+                numberOfColumns: 18,
+                numberOfRows: 1,
                 dimensions: new Vector2(43, 37));
 
             skeletonTexture = _content.Load<Texture2D>("Skeleton/skeleton_walk");
@@ -35,7 +36,8 @@ namespace mono_house_defense.Loaders
             skeleton.LoadAllFrames(
                 CharacterAction.Walk,
                 skeletonTexture,
-                numberOfFramesInSpriteSheet: 13,
+                numberOfColumns: 13,
+                numberOfRows: 1,
                 dimensions: new Vector2(22, 33));
 
             skeletonTexture = _content.Load<Texture2D>("Skeleton/skeleton_hit");
@@ -43,7 +45,8 @@ namespace mono_house_defense.Loaders
             skeleton.LoadAllFrames(
                 CharacterAction.Hit,
                 skeletonTexture,
-                numberOfFramesInSpriteSheet: 8,
+                numberOfColumns: 8,
+                numberOfRows: 1,
                 dimensions: new Vector2(30, 32));
 
             skeletonTexture = _content.Load<Texture2D>("Skeleton/skeleton_die");
@@ -51,18 +54,20 @@ namespace mono_house_defense.Loaders
             skeleton.LoadAllFrames(
                 CharacterAction.Die,
                 skeletonTexture,
-                numberOfFramesInSpriteSheet: 15,
+                numberOfColumns: 15,
+                numberOfRows: 1,
                 dimensions: new Vector2(33, 32));
         }
 
-        public void LoadBandit(Texture2D banditTexture, Bandit bandit)
+        public void LoadBandit(Bandit bandit)
         {
-            banditTexture = _content.Load<Texture2D>("Bandit/bandit_attack");
+            var banditTexture = _content.Load<Texture2D>("Bandit/bandit_attack");
 
             bandit.LoadAllFrames(
                 CharacterAction.Fight,
                 banditTexture,
-                numberOfFramesInSpriteSheet: 7,
+                numberOfColumns: 7,
+                numberOfRows: 1,
                 dimensions: new Vector2(80, 80));
 
             banditTexture = _content.Load<Texture2D>("Bandit/bandit_run");
@@ -70,18 +75,20 @@ namespace mono_house_defense.Loaders
             bandit.LoadAllFrames(
                 CharacterAction.Walk,
                 banditTexture,
-                numberOfFramesInSpriteSheet: 8,
+                numberOfColumns: 8,
+                numberOfRows: 1,
                 dimensions: new Vector2(80, 80));
         }
 
-        public void LoadKnight(Texture2D knightTexture, Knight knight)
+        public void LoadKnight(Knight knight)
         {
-            knightTexture = _content.Load<Texture2D>("Knight/knight_fight");
+            var knightTexture = _content.Load<Texture2D>("Knight/knight_fight");
 
             knight.LoadAllFrames(
                 CharacterAction.Fight,
                 knightTexture,
-                numberOfFramesInSpriteSheet: 10,
+                numberOfColumns: 10,
+                numberOfRows: 1,
                 dimensions: new Vector2(80, 80));
 
             knightTexture = _content.Load<Texture2D>("Knight/knight_walk");
@@ -89,7 +96,8 @@ namespace mono_house_defense.Loaders
             knight.LoadAllFrames(
                 CharacterAction.Walk,
                 knightTexture,
-                numberOfFramesInSpriteSheet: 8,
+                numberOfColumns: 8,
+                numberOfRows: 1,
                 dimensions: new Vector2(42, 42));
 
             knightTexture = _content.Load<Texture2D>("Knight/knight_die");
@@ -97,8 +105,21 @@ namespace mono_house_defense.Loaders
             knight.LoadAllFrames(
                 CharacterAction.Die,
                 knightTexture,
-                numberOfFramesInSpriteSheet: 9,
+                numberOfColumns: 9,
+                numberOfRows: 1,
                 dimensions: new Vector2(42, 42));
+        }
+
+        public void LoadExplosion(Explosion explosion)
+        {
+            var explosionTexture = _content.Load<Texture2D>("Explosions/explosion_5");
+
+            explosion.LoadAllFrames(
+                CharacterAction.Fight,
+                explosionTexture,
+                numberOfColumns: 8,
+                numberOfRows: 1,
+                dimensions: new Vector2(256, 274));
         }
     }
 }

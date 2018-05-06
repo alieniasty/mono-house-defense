@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using mono_house_defense.Characters.Abstractions;
 using Microsoft.Xna.Framework;
@@ -10,22 +9,18 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace mono_house_defense.Characters
 {
-    public class Skeleton : CharacterBase
+    public class Explosion : CharacterBase
     {
-        private const float _scale = 1;
+        private const float _scale = 0.3f;
 
-        public Skeleton(float millisecondsPerFrame, Vector2 position, float speed) 
+        public Explosion(float millisecondsPerFrame, Vector2 position, float speed) 
             : base(millisecondsPerFrame, position, speed)
         {
         }
 
         public override void Walk(SpriteBatch spriteBatch)
         {
-            base.Draw(
-                spriteBatch,
-                frame: $"{CharacterAction.Walk}_{Frame.WalkFrameIndex}",
-                rotation: 0.0f,
-                scale: _scale);
+            throw new NotImplementedException();
         }
 
         public override void Fight(SpriteBatch spriteBatch)
@@ -39,21 +34,12 @@ namespace mono_house_defense.Characters
 
         public override void Hit(SpriteBatch spriteBatch)
         {
-            base.Draw(
-                spriteBatch,
-                frame: $"{CharacterAction.Hit}_{Frame.HitFrameIndex}",
-                rotation: 0.0f,
-                scale: _scale);
+            throw new NotImplementedException();
         }
 
         public override void Die(SpriteBatch spriteBatch)
         {
-            base.Draw(
-                spriteBatch,
-                frame: $"{CharacterAction.Die}_{Frame.DieFrameIndex}",
-                rotation: 0.0f,
-                scale: _scale);
+            throw new NotImplementedException();
         }
     }
-
 }

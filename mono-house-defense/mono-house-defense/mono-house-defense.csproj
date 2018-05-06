@@ -46,6 +46,8 @@
     <Compile Include="Characters\Abstractions\DrawableCharacter.cs" />
     <Compile Include="Characters\Abstractions\Frame.cs" />
     <Compile Include="Characters\Bandit.cs" />
+    <Compile Include="Characters\Explosion.cs" />
+    <Compile Include="Characters\Factories\Abstractions\CharacterFactoryBase.cs" />
     <Compile Include="Characters\Knight.cs" />
     <Compile Include="Characters\Skeleton.cs" />
     <Compile Include="HouseDefenseGame.cs" />

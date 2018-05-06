@@ -6,25 +6,27 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace mono_house_defense.Characters.Abstractions
 {
-    public abstract class CharacterBase
+    public abstract class CharacterBase 
     {
         private float timeSinceLastFrame;
         private float _millisecondsPerFrame;
+        private float _speed;
+
+        public bool AnimationIsPlaying = false;
 
         protected Dictionary<string, DrawableCharacter> DrawableCharactersBase = new Dictionary<string, DrawableCharacter>();
         protected Frame Frame;
-        protected Vector2 _initialPosition;
-        private float _speed;
+        protected Vector2 Position;
 
         public abstract void Walk(SpriteBatch spriteBatch);
         public abstract void Fight(SpriteBatch spriteBatch);
         public abstract void Hit(SpriteBatch spriteBatch);
         public abstract void Die(SpriteBatch spriteBatch);
 
-        public CharacterBase(float millisecondsPerFrame, Vector2 initialPosition, float speed)
+        public CharacterBase(float millisecondsPerFrame, Vector2 position, float speed)
         {
             _millisecondsPerFrame = millisecondsPerFrame;
-            _initialPosition = initialPosition;
+            Position = position;
             _speed = speed;
         }
 
@@ -38,17 +40,23 @@ namespace mono_house_defense.Characters.Abstractions
             });
         }
 
-        public virtual void LoadAllFrames(CharacterAction action, Texture2D skeletonTexture, int numberOfFramesInSpriteSheet, Vector2 dimensions)
+        public virtual void LoadAllFrames(CharacterAction action, Texture2D texture, int numberOfColumns, int numberOfRows, Vector2 dimensions)
         {
-            SetMaxFrameIndexes(action, numberOfFramesInSpriteSheet);
+            SetMaxFrameIndexes(action, numberOfColumns * numberOfRows);
 
-            var frameBeginning = 0;
+            int frameIndex = 0;
 
-            for (var i = 0; i < numberOfFramesInSpriteSheet; i++)
+            for (var row = 0; row < numberOfRows; row++)
             {
-                var sourceRectangle = new Rectangle(frameBeginning, 0, (int)dimensions.X, (int)dimensions.Y);
-                AddFrame($"{action.ToString()}_{i}", skeletonTexture, sourceRectangle, SpriteEffects.None);
-                frameBeginning += (int)dimensions.X;
+                var frameBeginning = 0;
+
+                for (var column = 0; column < numberOfColumns; column++)
+                {
+                    var sourceRectangle = new Rectangle(frameBeginning, row * (int)dimensions.Y, (int)dimensions.X, (int)dimensions.Y);
+                    AddFrame($"{action.ToString()}_{frameIndex}", texture, sourceRectangle, SpriteEffects.None);
+                    frameBeginning += (int)dimensions.X;
+                    frameIndex++;
+                }
             }
 
         }
@@ -75,6 +83,7 @@ namespace mono_house_defense.Characters.Abstractions
 
         public virtual void UpdateAnimation(CharacterAction action, GameTime gameTime)
         {
+            AnimationIsPlaying = true;
             timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
             if (timeSinceLastFrame > _millisecondsPerFrame)
             {
@@ -82,19 +91,47 @@ namespace mono_house_defense.Characters.Abstractions
                 switch (action)
                 {
                     case CharacterAction.Walk:
-                        if (Frame.WalkFrameIndex == Frame.WalkFrameMaxIndex) Frame.WalkFrameIndex = 0;
+
+                        if (Frame.WalkFrameIndex == Frame.WalkFrameMaxIndex)
+                        {
+                            Frame.WalkFrameIndex = 0;
+                            AnimationIsPlaying = false;
+                        }
+
                         Frame.WalkFrameIndex++;
                         break;
+
                     case CharacterAction.Die:
-                        if (Frame.DieFrameIndex == Frame.DieFrameMaxIndex) Frame.DieFrameIndex = 0;
+
+                        if (Frame.DieFrameIndex == Frame.DieFrameMaxIndex)
+                        {
+                            Frame.DieFrameIndex = 0;
+                            AnimationIsPlaying = false;
+
+                        }
+
                         Frame.DieFrameIndex++;
                         break;
+
                     case CharacterAction.Fight:
-                        if (Frame.FightFrameIndex == Frame.FightFrameMaxIndex) Frame.FightFrameIndex = 0;
+
+                        if (Frame.FightFrameIndex == Frame.FightFrameMaxIndex)
+                        {
+                            Frame.FightFrameIndex = 0;
+                            AnimationIsPlaying = false;
+                        }
+
                         Frame.FightFrameIndex++;
                         break;
+
                     case CharacterAction.Hit:
-                        if (Frame.HitFrameIndex == Frame.HitFrameMaxIndex) Frame.HitFrameIndex = 0;
+
+                        if (Frame.HitFrameIndex == Frame.HitFrameMaxIndex)
+                        {
+                            Frame.HitFrameIndex = 0;
+                            AnimationIsPlaying = false;
+                        }
+
                         Frame.HitFrameIndex++;
                         break;
                 }
@@ -103,12 +140,12 @@ namespace mono_house_defense.Characters.Abstractions
 
         public virtual void UpdatePosition(GameTime gameTime)
         {
-            var position = _initialPosition;
+            var position = Position;
             position.X += (float)gameTime.ElapsedGameTime.TotalMilliseconds / _speed;
-            _initialPosition = position;
+            Position = position;
         }
 
-        public void Draw(SpriteBatch spriteBatch, string frame, Vector2 position, float rotation, int scale)
+        public void Draw(SpriteBatch spriteBatch, string frame, float rotation, float scale)
         {
             if (DrawableCharactersBase.Count == 0)
             {
@@ -117,7 +154,7 @@ namespace mono_house_defense.Characters.Abstractions
 
             spriteBatch.Draw(
                 DrawableCharactersBase[frame].Texture2D, 
-                position, 
+                Position, 
                 DrawableCharactersBase[frame].SourceRectangle, 
                 Color.White, 
                 rotation, 
