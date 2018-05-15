@@ -28,6 +28,7 @@ namespace mono_house_defense
         private MouseState lastMouseState;
 
         private Texture2D background;
+        private Texture2D scope;
         private Texture2D playerHouse;
 
         private bool isEligibleToShoot = false;
@@ -44,7 +45,6 @@ namespace mono_house_defense
         
         protected override void Initialize()
         {
-            //IsMouseVisible = true;
             base.Initialize();
         }
 
@@ -65,7 +65,7 @@ namespace mono_house_defense
                 initialPosition: new Vector2(0, skeletonsVerticalPosition));
 
             bandits = CharacterFactoryBase.Create<Bandit>(
-                numberOfCharacters: 10,
+                numberOfCharacters: 0,
                 millisecondsPerFrame: 50,
                 initialPosition: new Vector2(0, banditsVerticalPosition));
 
@@ -80,6 +80,7 @@ namespace mono_house_defense
                 initialPosition: new Vector2(graphics.GraphicsDevice.Viewport.Width - 110, playerShotVerticalPosition)).Single();
             
             background = Content.Load<Texture2D>("Background/background");
+            scope = Content.Load<Texture2D>("Miscellanous/scope");
             playerHouse = Content.Load<Texture2D>("Houses/House_1");
             singleShotSoundEffect = Content.Load<SoundEffect>("Sounds/snipershot").CreateInstance();
 
@@ -133,28 +134,27 @@ namespace mono_house_defense
 
             lastMouseState = currentMouseState;
 
+            var characterPositionBorder = GraphicsDevice.Viewport.Width - 120;
+
             foreach (var bandit in bandits)
             {
-                bandit.UpdateAnimation(CharacterAction.Walk, gameTime);
-                bandit.UpdatePosition(gameTime);
+                bandit.Update(gameTime, characterPositionBorder, currentMouseState);
             }
 
             foreach (var knight in knights)
             {
-                knight.UpdateAnimation(CharacterAction.Walk, gameTime);
-                knight.UpdatePosition(gameTime);
+                knight.Update(gameTime, characterPositionBorder, currentMouseState);
             }
 
             foreach (var skeleton in skeletons)
             {
-                skeleton.UpdateAnimation(CharacterAction.Walk, gameTime);
-                skeleton.UpdatePosition(gameTime);
+                skeleton.Update(gameTime, characterPositionBorder, currentMouseState);
             }
 
             if (isEligibleToShoot)
             {
                 singleShotSoundEffect.Play();
-                playerShot.UpdateAnimation(CharacterAction.Fight, gameTime);
+                playerShot.UpdateFrames(gameTime, CharacterAction.Fight);
 
                 if (playerShot.AnimationIsPlaying == false)
                 {
@@ -185,23 +185,32 @@ namespace mono_house_defense
 
             foreach (var bandit in bandits)
             {
-                bandit.Walk(spriteBatch);
+                bandit.Draw(spriteBatch);
             }
 
             foreach (var knight in knights)
             {
-                knight.Walk(spriteBatch);
+                knight.Draw(spriteBatch);
             }
 
             foreach (var skeleton in skeletons)
             {
-                skeleton.Walk(spriteBatch);
+                skeleton.Draw(spriteBatch);
             }
 
             if (isEligibleToShoot)
             {
-                playerShot.Fight(spriteBatch);
+                playerShot.Draw(spriteBatch);
             }
+
+            spriteBatch.End();
+
+            spriteBatch.Begin(SpriteSortMode.BackToFront);
+
+            spriteBatch.Draw(
+                scope,
+                new Rectangle(Mouse.GetState().X, Mouse.GetState().Y, 39, 39),
+                Color.White);
 
             spriteBatch.End();
 

@@ -18,12 +18,7 @@ namespace mono_house_defense.Characters
         {
         }
 
-        public override void Walk(SpriteBatch spriteBatch)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Fight(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(
                 spriteBatch,
@@ -32,14 +27,5 @@ namespace mono_house_defense.Characters
                 scale: _scale);
         }
 
-        public override void Hit(SpriteBatch spriteBatch)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Die(SpriteBatch spriteBatch)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

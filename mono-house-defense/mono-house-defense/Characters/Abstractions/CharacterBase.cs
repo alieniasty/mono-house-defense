@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace mono_house_defense.Characters.Abstractions
 {
@@ -11,17 +12,15 @@ namespace mono_house_defense.Characters.Abstractions
         private float timeSinceLastFrame;
         private float _millisecondsPerFrame;
         private float _speed;
+        private string _currentFrame;
 
         public bool AnimationIsPlaying = false;
 
-        protected Dictionary<string, DrawableCharacter> DrawableCharactersBase = new Dictionary<string, DrawableCharacter>();
+        private Dictionary<string, DrawableFrame> _drawableFramesDictionary = new Dictionary<string, DrawableFrame>();
         protected Frame Frame;
         protected Vector2 Position;
-
-        public abstract void Walk(SpriteBatch spriteBatch);
-        public abstract void Fight(SpriteBatch spriteBatch);
-        public abstract void Hit(SpriteBatch spriteBatch);
-        public abstract void Die(SpriteBatch spriteBatch);
+        private Vector2 _dimensions;
+        private CharacterAction _state;
 
         public CharacterBase(float millisecondsPerFrame, Vector2 position, float speed)
         {
@@ -32,7 +31,7 @@ namespace mono_house_defense.Characters.Abstractions
 
         protected virtual void AddFrame(string frame, Texture2D texture, Rectangle sourceRectangle, SpriteEffects spriteEffects)
         {
-            DrawableCharactersBase.Add(frame, new DrawableCharacter
+            _drawableFramesDictionary.Add(frame, new DrawableFrame
             {
                 Texture2D = texture,
                 SourceRectangle = sourceRectangle,
@@ -42,6 +41,7 @@ namespace mono_house_defense.Characters.Abstractions
 
         public virtual void LoadAllFrames(CharacterAction action, Texture2D texture, int numberOfColumns, int numberOfRows, Vector2 dimensions)
         {
+            _dimensions = dimensions;
             SetMaxFrameIndexes(action, numberOfColumns * numberOfRows);
 
             int frameIndex = 0;
@@ -81,7 +81,7 @@ namespace mono_house_defense.Characters.Abstractions
             }
         }
 
-        public virtual void UpdateAnimation(CharacterAction action, GameTime gameTime)
+        public virtual void UpdateFrames(GameTime gameTime, CharacterAction action)
         {
             AnimationIsPlaying = true;
             timeSinceLastFrame += gameTime.ElapsedGameTime.Milliseconds;
@@ -105,12 +105,13 @@ namespace mono_house_defense.Characters.Abstractions
 
                         if (Frame.DieFrameIndex == Frame.DieFrameMaxIndex)
                         {
-                            Frame.DieFrameIndex = 0;
                             AnimationIsPlaying = false;
-
                         }
 
-                        Frame.DieFrameIndex++;
+                        if (Frame.DieFrameIndex < Frame.DieFrameMaxIndex)
+                        {
+                            Frame.DieFrameIndex++;
+                        }
                         break;
 
                     case CharacterAction.Fight:
@@ -138,29 +139,106 @@ namespace mono_house_defense.Characters.Abstractions
             }
         }
 
-        public virtual void UpdatePosition(GameTime gameTime)
+        public virtual void Update(GameTime gameTime, int border, MouseState mouse, bool isAnimation = false)
         {
-            var position = Position;
-            position.X += (float)gameTime.ElapsedGameTime.TotalMilliseconds / _speed;
-            Position = position;
+            if (isAnimation == false)
+            {
+                SetState(gameTime, border, mouse);
+            }
+            else
+            {
+                _state = CharacterAction.Fight;
+            }
+            SetCurrentFrame();
+            UpdateFrames(gameTime, _state);
+        }
+
+        private void SetCurrentFrame()
+        {
+            switch (_state)
+            {
+                case CharacterAction.Walk:
+                    _currentFrame = $"{_state}_{Frame.WalkFrameIndex}";
+                    break;
+                case CharacterAction.Die:
+                    _currentFrame = $"{_state}_{Frame.DieFrameIndex}";
+                    break;
+                case CharacterAction.Fight:
+                    _currentFrame = $"{_state}_{Frame.FightFrameIndex}";
+                    break;
+                case CharacterAction.Hit:
+                    _currentFrame = $"{_state}_{Frame.HitFrameIndex}";
+                    break;
+            }
+        }
+
+        private void SetState(GameTime gameTime, int border, MouseState mouse)
+        {
+            if (Position.X < border && _state != CharacterAction.Die)
+            {
+                var position = Position;
+                position.X += (float)gameTime.ElapsedGameTime.TotalMilliseconds / _speed;
+                Position = position;
+
+                _state = CharacterAction.Walk;
+            }
+
+            if (Position.X >= border && _state != CharacterAction.Die)
+            {
+                _state = CharacterAction.Fight;
+            }
+
+            if (HitBoxTriggered(mouse))
+            {
+                _state = CharacterAction.Die;
+            }
+        }
+
+        private bool HitBoxTriggered(MouseState mouse)
+        {
+            if (mouse.X > Position.X && mouse.X < Position.X + _dimensions.X && mouse.LeftButton == ButtonState.Pressed)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public void Draw(SpriteBatch spriteBatch, string frame, float rotation, float scale)
         {
-            if (DrawableCharactersBase.Count == 0)
+            if (_drawableFramesDictionary.Count == 0)
             {
                 throw new KeyNotFoundException("DrawableCharactersBase dictionary must contain values to be drawn.");
             }
 
             spriteBatch.Draw(
-                DrawableCharactersBase[frame].Texture2D, 
+                _drawableFramesDictionary[frame].Texture2D, 
                 Position, 
-                DrawableCharactersBase[frame].SourceRectangle, 
+                _drawableFramesDictionary[frame].SourceRectangle, 
                 Color.White, 
                 rotation, 
                 new Vector2(0,0), 
                 scale, 
-                DrawableCharactersBase[frame].SpriteEffects, 
+                _drawableFramesDictionary[frame].SpriteEffects, 
+                layerDepth: 0.0f);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, float rotation, float scale)
+        {
+            if (_drawableFramesDictionary.Count == 0)
+            {
+                throw new KeyNotFoundException("DrawableCharactersBase dictionary must contain values to be drawn.");
+            }
+
+            spriteBatch.Draw(
+                _drawableFramesDictionary[_currentFrame].Texture2D,
+                Position,
+                _drawableFramesDictionary[_currentFrame].SourceRectangle,
+                Color.White,
+                rotation,
+                new Vector2(0, 0),
+                scale,
+                _drawableFramesDictionary[_currentFrame].SpriteEffects,
                 layerDepth: 0.0f);
         }
     }

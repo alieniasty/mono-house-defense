@@ -70,6 +70,15 @@ namespace mono_house_defense.Loaders
                 numberOfRows: 1,
                 dimensions: new Vector2(80, 80));
 
+            banditTexture = _content.Load<Texture2D>("Bandit/bandit_attack");
+
+            bandit.LoadAllFrames(
+                CharacterAction.Die,
+                banditTexture,
+                numberOfColumns: 7,
+                numberOfRows: 1,
+                dimensions: new Vector2(80, 80));
+
             banditTexture = _content.Load<Texture2D>("Bandit/bandit_run");
 
             bandit.LoadAllFrames(
@@ -104,6 +113,15 @@ namespace mono_house_defense.Loaders
 
             knight.LoadAllFrames(
                 CharacterAction.Die,
+                knightTexture,
+                numberOfColumns: 9,
+                numberOfRows: 1,
+                dimensions: new Vector2(42, 42));
+
+            knightTexture = _content.Load<Texture2D>("Knight/knight_die");
+
+            knight.LoadAllFrames(
+                CharacterAction.Hit,
                 knightTexture,
                 numberOfColumns: 9,
                 numberOfRows: 1,

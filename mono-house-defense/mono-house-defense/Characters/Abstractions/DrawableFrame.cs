@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace mono_house_defense.Characters.Abstractions
 {
-    public class DrawableCharacter
+    public class DrawableFrame
     {
         public Texture2D Texture2D { get; set; }
         public Rectangle SourceRectangle { get; set; }

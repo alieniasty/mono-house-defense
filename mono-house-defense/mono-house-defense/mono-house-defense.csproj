@@ -43,7 +43,7 @@
   <ItemGroup>
     <Compile Include="Characters\Abstractions\CharacterAction.cs" />
     <Compile Include="Characters\Abstractions\CharacterBase.cs" />
-    <Compile Include="Characters\Abstractions\DrawableCharacter.cs" />
+    <Compile Include="Characters\Abstractions\DrawableFrame.cs" />
     <Compile Include="Characters\Abstractions\Frame.cs" />
     <Compile Include="Characters\Bandit.cs" />
     <Compile Include="Characters\Explosion.cs" />

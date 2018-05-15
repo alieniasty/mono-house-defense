@@ -18,34 +18,10 @@ namespace mono_house_defense.Characters
         {
         }
 
-        public override void Hit(SpriteBatch spriteBatch)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Walk(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(
                 spriteBatch,
-                frame: $"{CharacterAction.Walk}_{Frame.WalkFrameIndex}",
-                rotation: 0.0f,
-                scale: _scale);
-        }
-
-        public override void Fight(SpriteBatch spriteBatch)
-        {
-            base.Draw(
-                spriteBatch,
-                frame: $"{CharacterAction.Fight}_{Frame.FightFrameIndex}",
-                rotation: 0.0f,
-                scale: _scale);
-        }
-
-        public override void Die(SpriteBatch spriteBatch)
-        {
-            base.Draw(
-                spriteBatch,
-                frame: $"{CharacterAction.Die}_{Frame.DieFrameIndex}",
                 rotation: 0.0f,
                 scale: _scale);
         }
