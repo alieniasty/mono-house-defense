@@ -11,7 +11,7 @@ namespace mono_house_defense.Characters
 {
     public class Knight : CharacterBase
     {
-        private const float _scale = 1;
+        private const float _scale = 2;
 
         public Knight(float millisecondsPerFrame, Vector2 position, float speed) 
             : base(millisecondsPerFrame, position, speed)

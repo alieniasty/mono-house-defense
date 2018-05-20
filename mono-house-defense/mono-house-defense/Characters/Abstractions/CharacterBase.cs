@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using mono_house_defense.DTO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -139,16 +140,9 @@ namespace mono_house_defense.Characters.Abstractions
             }
         }
 
-        public virtual void Update(GameTime gameTime, int border, MouseState mouse, bool isAnimation = false)
+        public virtual void Update(GameTime gameTime, int border, AimState aim)
         {
-            if (isAnimation == false)
-            {
-                SetState(gameTime, border, mouse);
-            }
-            else
-            {
-                _state = CharacterAction.Fight;
-            }
+            SetState(gameTime, border, aim);
             SetCurrentFrame();
             UpdateFrames(gameTime, _state);
         }
@@ -172,7 +166,7 @@ namespace mono_house_defense.Characters.Abstractions
             }
         }
 
-        private void SetState(GameTime gameTime, int border, MouseState mouse)
+        private void SetState(GameTime gameTime, int border, AimState aim)
         {
             if (Position.X < border && _state != CharacterAction.Die)
             {
@@ -188,16 +182,22 @@ namespace mono_house_defense.Characters.Abstractions
                 _state = CharacterAction.Fight;
             }
 
-            if (HitBoxTriggered(mouse))
+            if (HitBoxTriggered(aim))
             {
                 _state = CharacterAction.Die;
             }
         }
 
-        private bool HitBoxTriggered(MouseState mouse)
+        private bool HitBoxTriggered(AimState aim)
         {
-            if (mouse.X > Position.X && mouse.X < Position.X + _dimensions.X && mouse.LeftButton == ButtonState.Pressed)
+            var aimCenter = new Rectangle(aim.MouseState.X, aim.MouseState.Y, 19, 19);
+            var character = new Rectangle((int) Position.X, (int) Position.Y, (int) _dimensions.X, (int) _dimensions.Y);
+
+            if (aimCenter.Intersects(character) && aim.IsEligibleToShot == true && _state != CharacterAction.Die)
             {
+                var score = int.Parse(Score.Instance.Value) + 10;
+                Score.Instance.Value = score.ToString();
+                Score.Instance.Killed++;
                 return true;
             }
 

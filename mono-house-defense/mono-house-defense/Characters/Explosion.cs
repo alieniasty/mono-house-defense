@@ -11,7 +11,7 @@ namespace mono_house_defense.Characters
 {
     public class Explosion : CharacterBase
     {
-        private const float _scale = 0.3f;
+        private const float _scale = 0.6f;
 
         public Explosion(float millisecondsPerFrame, Vector2 position, float speed) 
             : base(millisecondsPerFrame, position, speed)

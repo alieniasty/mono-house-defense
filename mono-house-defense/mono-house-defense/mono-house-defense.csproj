@@ -47,9 +47,13 @@
     <Compile Include="Characters\Abstractions\Frame.cs" />
     <Compile Include="Characters\Bandit.cs" />
     <Compile Include="Characters\Explosion.cs" />
-    <Compile Include="Characters\Factories\Abstractions\CharacterFactoryBase.cs" />
+    <Compile Include="DTO\Score.cs" />
+    <Compile Include="Factories\CharacterFactoryBase.cs" />
     <Compile Include="Characters\Knight.cs" />
     <Compile Include="Characters\Skeleton.cs" />
+    <Compile Include="DTO\AimState.cs" />
+    <Compile Include="DTO\GameState.cs" />
+    <Compile Include="DTO\LevelState.cs" />
     <Compile Include="HouseDefenseGame.cs" />
     <Compile Include="Loaders\AnimationsLoader.cs" />
     <Compile Include="Program.cs" />

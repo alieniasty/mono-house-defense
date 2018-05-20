@@ -223,18 +223,6 @@
 /processorParam:Quality=Best
 /build:Sounds/snipershot.wav
 
-#begin Scopes/scope_1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Scopes/scope_1.png
-
 #begin Miscellanous/scope.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -246,4 +234,23 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Miscellanous/scope.png
+
+#begin Miscellanous/PlayButton.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Miscellanous/PlayButton.png
+
+#begin Miscellanous/arcadeclassic.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Miscellanous/arcadeclassic.spritefont
 

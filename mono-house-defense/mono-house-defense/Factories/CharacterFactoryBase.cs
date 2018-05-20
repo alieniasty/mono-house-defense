@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using mono_house_defense.Characters.Abstractions;
+using mono_house_defense.Characters;
 using Microsoft.Xna.Framework;
 
-namespace mono_house_defense.Characters.Factories.Astractions
+namespace mono_house_defense.Factories
 {
     public abstract class CharacterFactoryBase
     {
@@ -18,7 +15,11 @@ namespace mono_house_defense.Characters.Factories.Astractions
 
             for (int i = 0; i < numberOfCharacters; i++)
             {
-                charactersList.Add((T)Activator.CreateInstance(typeof(T), millisecondsPerFrame, initialPosition, random.Next(20, 25)));
+                if (typeof(T) != typeof(Explosion))
+                {
+                    initialPosition.X += (float)(random.NextDouble() * (-100 - 300) + -100);
+                }
+                charactersList.Add((T)Activator.CreateInstance(typeof(T), millisecondsPerFrame, initialPosition, random.Next(10, 20)));
             }
 
             return charactersList;
