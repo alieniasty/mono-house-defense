@@ -24,6 +24,7 @@ namespace mono_house_defense
         private List<Skeleton> skeletons;
         private List<Bandit> bandits;
         private List<Knight> knights;
+        private List<Sorcerer> sorcerers;
         private Explosion playerShot;
 
         private SoundEffectInstance singleShotSoundEffect;
@@ -56,7 +57,7 @@ namespace mono_house_defense
         public HouseDefenseGame()
         {
             _graphics = new GraphicsDeviceManager(this);
-            //_graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = true;
             _graphics.PreferredBackBufferWidth = 1920;
             _graphics.PreferredBackBufferHeight = 1080;
             Content.RootDirectory = "Content";
@@ -77,6 +78,7 @@ namespace mono_house_defense
                     IsMouseVisible = false;
                     break;
                 case GameState.Menu:
+                    levelState.LevelNumber++;
                     LoadMenu();
                     IsMouseVisible = true;
                     break;
@@ -93,6 +95,25 @@ namespace mono_house_defense
         private void LoadGameplay()
         {
             #region Initialize content
+
+            if (levelState.LevelNumber == 2) 
+            {
+                levelState.BanditsVerticalPosition += 20;
+                levelState.KnightsVerticalPosition += 40;
+                levelState.SkeletonsVerticalPosition += 40;
+                levelState.SorcerersVerticalPosition += 20;
+                var levelStatePlayerHousePosition = levelState.PlayerHousePosition;
+                levelStatePlayerHousePosition.Y += 20;
+                levelState.PlayerHousePosition = levelStatePlayerHousePosition;
+            }
+            if (levelState.LevelNumber >= 2)
+            {
+                background = Content.Load<Texture2D>("Background/background_1");
+            }
+            else
+            {
+                background = Content.Load<Texture2D>("Background/background");
+            }
 
             var random = new Random();
 
@@ -111,12 +132,24 @@ namespace mono_house_defense
                 millisecondsPerFrame: 50,
                 initialPosition: new Vector2(levelState.KnightsHorizontalPosition, levelState.KnightsVerticalPosition));
 
+            if (levelState.LevelNumber > 2)
+            {
+                levelState.NumberOfSorcerers++;
+
+                sorcerers = CharacterFactoryBase.Create<Sorcerer>(
+                    numberOfCharacters: levelState.NumberOfSorcerers,
+                    millisecondsPerFrame: 50,
+                    initialPosition: new Vector2(levelState.SorcerersHorizontalPosition, levelState.SorcerersVerticalPosition));
+
+                levelState.SorcererReady = true;
+            }
+
             playerShot = CharacterFactoryBase.Create<Explosion>(
                 numberOfCharacters: 1,
                 millisecondsPerFrame: 10,
                 initialPosition: new Vector2(levelState.PlayerShotHorizontalPosition, levelState.PlayerShotVerticalPosition)).Single();
 
-            background = Content.Load<Texture2D>("Background/background");
+            
             scope = Content.Load<Texture2D>("Miscellanous/scope");
             playerHouse = Content.Load<Texture2D>("Houses/House_1");
             font = Content.Load<SpriteFont>("Miscellanous/arcadeclassic");
@@ -141,6 +174,14 @@ namespace mono_house_defense
             foreach (var skeleton in skeletons)
             {
                 loader.LoadSkeleton(skeleton);
+            }
+
+            if (levelState.LevelNumber > 2)
+            {
+                foreach (var sorcerer in sorcerers)
+                {
+                    loader.LoadSorcerers(sorcerer);
+                }
             }
 
             loader.LoadExplosion(playerShot);
@@ -188,6 +229,9 @@ namespace mono_house_defense
                 playButtonColor = Color.Green;
                 if (mouseState.LeftButton == ButtonState.Pressed)
                 {
+                    gameplayReady = false;
+                    gameplayStarted = false;
+                    levelState.GameplayIsStarting = true;
                     playButtonColor = Color.Red;
                     GraphicsDevice.Clear(Color.Black);
                     state = GameState.Play;
@@ -205,10 +249,15 @@ namespace mono_house_defense
 
             if (Score.Instance.Killed >= levelState.TotalNumberOfCharacters)
             {
+                levelState.GameplayIsStarting = true;
+                Score.Instance.Killed = 0;
                 GraphicsDevice.Clear(Color.Black);
                 state = GameState.Menu;
                 gameplayReady = false;
                 gameplayStarted = false;
+                levelState.NumberOfSkeletons++;
+                levelState.NumberOfBandits++;
+                levelState.NumberOfKnights++;
                 LoadContent();
             }
 
@@ -221,10 +270,12 @@ namespace mono_house_defense
                 isEligibleToShoot = true;
             }
 
+            levelState.GameplayIsStarting = false;
+
             var aimState = new AimState(currentMouseState, isEligibleToShoot);
             lastMouseState = currentMouseState;
 
-            var characterPositionBorder = GraphicsDevice.Viewport.Width - 120;
+            var characterPositionBorder = GraphicsDevice.Viewport.Width - 300;
 
             foreach (var bandit in bandits)
             {
@@ -239,6 +290,14 @@ namespace mono_house_defense
             foreach (var skeleton in skeletons)
             {
                 skeleton.Update(gameTime, characterPositionBorder, aimState);
+            }
+
+            if (levelState.LevelNumber > 2 && levelState.SorcererReady)
+            {
+                foreach (var sorcerer in sorcerers)
+                {
+                    sorcerer.Update(gameTime, characterPositionBorder, aimState);
+                }
             }
 
             if (isEligibleToShoot)
@@ -260,7 +319,7 @@ namespace mono_house_defense
             switch (state)
             {
                 case GameState.Play:
-                    if (gameplayStarted)
+                    if (gameplayStarted && gameplayReady)
                     {
                         DrawGameplay();
                     }
@@ -307,6 +366,14 @@ namespace mono_house_defense
             foreach (var skeleton in skeletons)
             {
                 skeleton.Draw(spriteBatch);
+            }
+
+            if (levelState.LevelNumber > 2 && levelState.SorcererReady)
+            {
+                foreach (var sorcerer in sorcerers)
+                {
+                    sorcerer.Draw(spriteBatch);
+                }
             }
 
             if (isEligibleToShoot)

@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xna.Framework.Graphics;
 using mono_house_defense.Characters.Abstractions;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace mono_house_defense.Characters
 {
-    public class Knight : CharacterBase
+    public class Sorcerer : CharacterBase
     {
-        private const float _scale = 2;
+        private const int _scale = 1;
 
-        public Knight(float millisecondsPerFrame, Vector2 position, float speed) 
-            : base(millisecondsPerFrame, position, speed)
+        public Sorcerer(float millisecondsPerFrame, Vector2 position, float speed) : base(millisecondsPerFrame, position, speed)
         {
         }
 
@@ -32,7 +31,7 @@ namespace mono_house_defense.Characters
         {
             if (State == CharacterAction.Fight && PositionChanged == true)
             {
-                Position.Y -= 65;
+                Position.Y -= 80;
                 PositionChanged = false;
             }
         }

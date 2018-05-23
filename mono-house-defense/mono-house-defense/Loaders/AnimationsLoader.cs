@@ -139,5 +139,35 @@ namespace mono_house_defense.Loaders
                 numberOfRows: 1,
                 dimensions: new Vector2(256, 274));
         }
+
+        public void LoadSorcerers(Sorcerer sorcerer)
+        {
+            var sorcererTexture = _content.Load<Texture2D>("Sorcerer/sorcerer_attack");
+
+            sorcerer.LoadAllFrames(
+                CharacterAction.Fight,
+                sorcererTexture,
+                numberOfColumns: 10,
+                numberOfRows: 1,
+                dimensions: new Vector2(200, 200));
+
+            sorcererTexture = _content.Load<Texture2D>("Sorcerer/sorcerer_slide");
+
+            sorcerer.LoadAllFrames(
+                CharacterAction.Walk,
+                sorcererTexture,
+                numberOfColumns: 8,
+                numberOfRows: 7,
+                dimensions: new Vector2(100, 100));
+
+            sorcererTexture = _content.Load<Texture2D>("Sorcerer/sorcerer_die");
+
+            sorcerer.LoadAllFrames(
+                CharacterAction.Die,
+                sorcererTexture,
+                numberOfColumns: 4,
+                numberOfRows: 4,
+                dimensions: new Vector2(100, 100));
+        }
     }
 }

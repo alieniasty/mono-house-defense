@@ -16,12 +16,13 @@ namespace mono_house_defense.Characters.Abstractions
         private string _currentFrame;
 
         public bool AnimationIsPlaying = false;
+        protected bool PositionChanged = false;
 
         private Dictionary<string, DrawableFrame> _drawableFramesDictionary = new Dictionary<string, DrawableFrame>();
         protected Frame Frame;
         protected Vector2 Position;
         private Vector2 _dimensions;
-        private CharacterAction _state;
+        protected CharacterAction State;
 
         public CharacterBase(float millisecondsPerFrame, Vector2 position, float speed)
         {
@@ -144,47 +145,48 @@ namespace mono_house_defense.Characters.Abstractions
         {
             SetState(gameTime, border, aim);
             SetCurrentFrame();
-            UpdateFrames(gameTime, _state);
+            UpdateFrames(gameTime, State);
         }
 
         private void SetCurrentFrame()
         {
-            switch (_state)
+            switch (State)
             {
                 case CharacterAction.Walk:
-                    _currentFrame = $"{_state}_{Frame.WalkFrameIndex}";
+                    _currentFrame = $"{State}_{Frame.WalkFrameIndex}";
                     break;
                 case CharacterAction.Die:
-                    _currentFrame = $"{_state}_{Frame.DieFrameIndex}";
+                    _currentFrame = $"{State}_{Frame.DieFrameIndex}";
                     break;
                 case CharacterAction.Fight:
-                    _currentFrame = $"{_state}_{Frame.FightFrameIndex}";
+                    _currentFrame = $"{State}_{Frame.FightFrameIndex}";
                     break;
                 case CharacterAction.Hit:
-                    _currentFrame = $"{_state}_{Frame.HitFrameIndex}";
+                    _currentFrame = $"{State}_{Frame.HitFrameIndex}";
                     break;
             }
         }
 
         private void SetState(GameTime gameTime, int border, AimState aim)
         {
-            if (Position.X < border && _state != CharacterAction.Die)
+            if (Position.X < border && State != CharacterAction.Die &&  State != CharacterAction.Fight)
             {
                 var position = Position;
                 position.X += (float)gameTime.ElapsedGameTime.TotalMilliseconds / _speed;
                 Position = position;
 
-                _state = CharacterAction.Walk;
+                State = CharacterAction.Walk;
             }
 
-            if (Position.X >= border && _state != CharacterAction.Die)
+            if (Position.X >= border && State != CharacterAction.Die && State != CharacterAction.Fight)
             {
-                _state = CharacterAction.Fight;
+                State = CharacterAction.Fight;
+                PositionChanged = true;
             }
 
             if (HitBoxTriggered(aim))
             {
-                _state = CharacterAction.Die;
+                State = CharacterAction.Die;
             }
         }
 
@@ -193,7 +195,7 @@ namespace mono_house_defense.Characters.Abstractions
             var aimCenter = new Rectangle(aim.MouseState.X, aim.MouseState.Y, 19, 19);
             var character = new Rectangle((int) Position.X, (int) Position.Y, (int) _dimensions.X, (int) _dimensions.Y);
 
-            if (aimCenter.Intersects(character) && aim.IsEligibleToShot == true && _state != CharacterAction.Die)
+            if (aimCenter.Intersects(character) && aim.IsEligibleToShot == true && State != CharacterAction.Die)
             {
                 var score = int.Parse(Score.Instance.Value) + 10;
                 Score.Instance.Value = score.ToString();

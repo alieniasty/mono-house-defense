@@ -19,7 +19,7 @@ namespace mono_house_defense.Factories
                 {
                     initialPosition.X += (float)(random.NextDouble() * (-100 - 300) + -100);
                 }
-                charactersList.Add((T)Activator.CreateInstance(typeof(T), millisecondsPerFrame, initialPosition, random.Next(10, 20)));
+                charactersList.Add((T)Activator.CreateInstance(typeof(T), millisecondsPerFrame, initialPosition, random.Next(3, 7)));
             }
 
             return charactersList;
